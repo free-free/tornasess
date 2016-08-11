@@ -192,7 +192,6 @@ class RedisSession(AbstractSession):
             result = yield self._client.hdel(self._session_id, key)
         return result
 
-    @gen.coroutine
     def __getitem__(self, key):
         return self.get(key)
 
