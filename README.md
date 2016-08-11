@@ -3,7 +3,9 @@
 ## Environment
 
 python version: >= 3.4
+
 backend: redis,
+
 required: tornadis, tornado
 
 ## Installation
@@ -65,4 +67,4 @@ loop.run_sync(session_opertions)
 
 ## LICENSE
 
-(MIT LICENSE)[LICENSE]
+[MIT LICENSE)](LICENSE)
