@@ -2,11 +2,11 @@
 
 ## Environment
 
-python version: >= 3.4
+**python version**: >= 3.4
 
-backend: redis,
+**backend**: redis,
 
-required: tornadis, tornado
+**required**: tornadis, tornado
 
 ## Installation
 ```sh
@@ -18,15 +18,14 @@ $ python3.x setup.py install
 ```python
 
 from tornado import ioloop,gen
-from tornasess  import SesssionCacheFactory
+from tornasess  import SessionCacheFactory
 
 sess_fac = SessionCacheFactory("redis", 'localhost', 6379)
 
 @gen.coroutine
 def session_opertions():
     # get session instance from session factory
-    sess = sess_fac.get_session(
-)
+    sess = sess_fac.get_sessio()
     # create new session
     yield sess.start()
 
@@ -64,7 +63,10 @@ loop.run_sync(session_opertions)
    
 
 ```
+## Version
+0.1
 
 ## LICENSE
 
-[MIT LICENSE)](LICENSE)
+[MIT LICENSE](LICENSE)
+
