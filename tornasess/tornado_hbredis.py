@@ -8,10 +8,11 @@ import functools
 def decode(func):
     @functools.wraps(func)
     @gen.coroutine
-    def wrapper(*args,**kwargs):
-        data = yield func(*args,**kwargs)
-        if isinstance(data,bytes):
-            data = data.decode("utf-8")
+    def wrapper(self, *args, **kwargs):
+        data = yield func(self, *args, **kwargs)
+        if self._bytes_decode == True:
+            if isinstance(data,bytes):
+                data = data.decode("utf-8")
         return data
     return wrapper
 
@@ -601,13 +602,14 @@ class TornadoHBRedis(
     ServerCommandsMixin
 ):
 
-    def __init__(self, host, port, autoconnect=True):
+    def __init__(self, host, port, autoconnect=True, bytes_decode=False):
         assert isinstance(host, str)
         assert isinstance(port, int)
         assert isinstance(autoconnect, bool)
         self._host = host
         self._port = port
         self._autoconnect = autoconnect
+        self._bytes_decode = bytes_decode
         self._client = tornadis.Client(
             host=self._host, port=self._port, autoconnect=self._autoconnect)
 
