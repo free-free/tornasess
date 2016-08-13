@@ -1,11 +1,15 @@
 #-*- coding:utf-8 -*-
 
-from tornado import gen
 import uuid
 import base64
-import tornadis
-from .tornado_hbredis import TornadoHBRedis
 from collections import deque
+import pickle
+
+import tornadis
+from tornado import gen
+
+from .tornado_hbredis import TornadoHBRedis
+
 
 
 class AbstractSession(object):
@@ -61,7 +65,7 @@ class AbstractSession(object):
         """
         raise NotImplementedError
 
-    def refresh(self, session_id=None):
+    def refresh_sid(self, session_id=None):
         """
             create new session 
         """
@@ -152,44 +156,55 @@ class RedisSession(AbstractSession):
                 "utf-8")] = src_list[i + 1].decode("utf-8")
         return dest_dict
 
-    def refresh(self, session_id=None):
+    def refresh_sid(self, session_id=None):
         if session_id:
             self._session_id = session_id
         else:
             self._session_id = self._gen_session_id()
-        self._session_start_flag = False
+        return self._session_id
 
     @gen.coroutine
     def start(self, session_id=None):
         if session_id:
             self._session_id = session_id
-        session_data_list = yield self._client.hgetall(self._session_id)
-        self._session_data = self._list_to_dict(session_data_list)
-        if not self._session_data:
+        session_data_byte = yield self._client.sget(self._session_id)
+        if not session_data_byte:
             self._session_data = {}
+        else:
+            self._session_data = pickle.loads(session_data_byte) or {}
         self._session_start_flag = True
 
     @gen.coroutine
     def save(self, expire=0):
         self._check_session_start()
-        result = yield self._client.hmset(self._session_id, self._session_data)
+        result = yield self._client.set(self._session_id, pickle.dumps(self._session_data))
         if int(expire) > 0:
             yield self._client.expire(self._session_id, expire)
         return result
 
     @gen.coroutine
     def destroy(self, session_id=None):
-        if session_id:
-            result = yield self._client.delete(session_id)
-        else:
-            result = yield self._client.delete(self._session_id)
+        if not session_id:
+            session_id = self._session_id
+            self._session_data = {}
+        result = yield self._client.delete(session_id)
+        return result
 
     @gen.coroutine
     def delete(self, key, session_id=None):
-        if session_id:
-            result = yield self._client.hdel(session_id, key)
+        result = None
+        if  session_id :
+            sess_data_byte = yield self._client.sget(session_id) 
+            if not sess_data_byte:
+                return result
+            sess_data = pickle.loads(sess_data_byte) 
+            if key in sess_data:
+                del sess_data[key]
+                result = yield self._client.set(sesion_id, pickle.dumps(sess_data))
         else:
-            result = yield self._client.hdel(self._session_id, key)
+            if key in self._session_data:
+                del self._session_data[key]
+                result = yield self._client.set(self._session_id, pickle.dumps(self._session_data))
         return result
 
     def __getitem__(self, key):
