@@ -184,10 +184,11 @@ class Session(AbstractSession):
 
     @gen.coroutine
     def start(self, session_id=None):
-        if session_id:
-            self._session_id = session_id
-        self._session_data = yield self._backend.retrieve(self._session_id)
-        self._session_start_flag = True
+        if not self._session_start_flag:
+            if session_id:
+                self._session_id = session_id
+            self._session_data = yield self._backend.retrieve(self._session_id)
+            self._session_start_flag = True
 
     @gen.coroutine
     def end(self, expires=0):
@@ -196,6 +197,7 @@ class Session(AbstractSession):
         self._check_session_start()
         resp = yield self._backend.store(self._session_id, self._session_data, expires)
         self._data_changed = False
+        self._session_start_flag = False
         return resp
 
     def destroy(self):
