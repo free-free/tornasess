@@ -162,7 +162,7 @@ class DiskSessionStore(SessionStore):
 
     def _get_key_path(self, key):
         if os.path.sep in key:
-            raise ValueError("Bad key:5s" % repr(key))
+            raise ValueError("Bad key:%s" % repr(key))
         return os.path.join(self.root, key)
 
     @_serialize
