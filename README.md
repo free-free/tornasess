@@ -25,7 +25,7 @@ sess_fac = SessionCacheFactory("redis", 'localhost', 6379)
 @gen.coroutine
 def session_opertions():
     # get session instance from session factory
-    sess = sess_fac.get_sessio()
+    sess = sess_fac.get_session()
     # create new session
     yield sess.start()
 
