@@ -177,9 +177,14 @@ class RedisSession(AbstractSession):
     @gen.coroutine
     def save(self, expire=0):
         self._check_session_start()
-        result = yield self._client.set(self._session_id, pickle.dumps(self._session_data))
         if int(expire) > 0:
-            yield self._client.expire(self._session_id, expire)
+            pipeline = self._client.pipeline()
+            pipeline.set(self._session_id, pickle.dumps(self._session_data))
+            pipeline.expire(self._session_id, int(expire))
+            result = yield pipeline.execute()
+            return result
+        else:
+            result = yield self._client.set(self._session_id, pickle.dumps(self._session_data))
         return result
 
     @gen.coroutine
