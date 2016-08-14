@@ -132,17 +132,19 @@ class Session(AbstractSession):
         self._session_data = dict()
         self._session_start_flag = False
         self._used_flag = False
+        self._data_changed = False
         self._cache_factory = cache_factory
 
     def __getitem__(self, key):
         return self._session_data.get(key)
 
     def __setitem__(self, key, value):
-        self._session_data[key] = value
+        self.set(key ,value)
     
     def __delitem__(self, key):
         if key in self._session_data:
             del self._session_data[key]
+            self._data_changed = True
 
     def __contains__(self, key):
         return (key in self._session_data)
@@ -153,10 +155,12 @@ class Session(AbstractSession):
 
     def set(self, key, value):
         self._session_data[key] = value
+        self._data_changed = True
 
     def multi_set(self, pairs):
         for k, v in pairs.items():
             self._session_data[k] = v
+        self._data_changed = True
 
     def multi_get(self, key_l):
         pairs = {}
@@ -175,6 +179,7 @@ class Session(AbstractSession):
             self._session_id = session_id
         else:
             self._session_id = self._gen_session_id()
+        self._data_changed = True
         return self._session_id
 
     @gen.coroutine
@@ -186,16 +191,21 @@ class Session(AbstractSession):
 
     @gen.coroutine
     def end(self, expires=0):
+        if int(expires) == 0 and not self._data_changed:
+            return False
         self._check_session_start()
         resp = yield self._backend.store(self._session_id, self._session_data, expires)
+        self._data_changed = False
         return resp
 
     def destroy(self):
         self._session_data = {}
+        self._data_changed = True
 
     def delete(self, key):
         if key in self._session_data:
             del self._session_data[key]
+            self._data_changed = True
             return True
         return False
 
