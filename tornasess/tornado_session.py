@@ -3,7 +3,10 @@
 import uuid
 import base64
 from collections import deque
-import pickle
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 import tornadis
 from tornado import gen
