@@ -4,9 +4,9 @@
 
 **python version**: >= 3.4
 
-**backend**: redis,
+**backend**: redis,memcache
 
-**required**: tornadis, tornado
+**required**: tornadis, tornado, asyncmc
 
 ## Installation
 ```sh
@@ -15,54 +15,98 @@ $ python3.x setup.py install
 
 ## Quickstarted
 
+> 1. create session instance
+
 ```python
 
 from tornado import ioloop,gen
 from tornasess  import SessionCacheFactory
 
-sess_fac = SessionCacheFactory("redis", 'localhost', 6379)
+config = {
+   "host":"localhost",
+   "port":6379,
+}
+sess_fac = SessionCacheFactory("redis",config)
 
-@gen.coroutine
-def session_opertions():
-    # get session instance from session factory
-    sess = sess_fac.get_session()
-    # create new session
-    yield sess.start()
+# or 
+# config = {
+#      "host":["192.168.0.1","192.168.0.2"],
+#      "port":[4000,5000]
+# }
+# sess_fac = SessionCacheFactory("memcache",config)
+#
 
-    # set session value
-    sess['name'] = 'xxxxx'
-    sess.set("age",100)
-    sess.multi_set({"address":"xxxx","sex":"xxx"})
-    
-    # get session value
-    sess['name']
-    sess.get('name')
-    sess.multi_get(['address','age','name'])
-    sess.all()
-     
-    # save session
-    yield sess.save(expire=3600)
-
-    # get session id 
-    sess.session_id
-
-    # delete session value
-    yield sess.delete("name")
-    # desctroy session
-    yield sess.destroy()
-    
-    session_id = "DHUI9892djDJuewi0wDShui3UeSka=="
-    # get old session 
-    yield sess.start(session_id)
-  
-    # cache session connection to sesion factory
-    sees_fac.cache(sess)
-
-loop = ioloop.IOLoop.current()
-loop.run_sync(session_opertions)
-   
+session = sess_fac.get_session()
 
 ```
+
+> 2. set session data
+
+```python
+
+    yield session.start()
+    session['name'] = 'xxxxx'
+    session.set("age",100)
+    session.multi_set({"address":"xxxx","sex":"xxx"})
+    yield session.end(expires=3600)
+
+```
+
+> 3. get session data
+
+```python
+
+    session_id = "GU3ZTM2YTA5ZWViNDE4MTgzM2Q3MzhhMjdjY2IyOWU="
+    yield session.start(session_id)
+    session['name']
+    session.get('name')
+    session.multi_get(['address','age','name'])
+    session.all()
+    #check session field existence
+    print('name' in session)
+    #get session id
+    session.session_id
+
+    #Note here!!
+    #   if you don't make change to session data, 
+    #   it's not necessary to call 'session.end()'
+
+```
+
+> 4. delete session data
+
+```python
+
+    session_id = "GU3ZTM2YTA5ZWViNDE4MTgzM2Q3MzhhMjdjY2IyOWU="
+    yield session.start(session_id)
+    session.delete("name")
+    del session['age']
+    yield session.end()
+    
+```
+
+> 5. destroy session
+
+```python
+
+    session_id = "GU3ZTM2YTA5ZWViNDE4MTgzM2Q3MzhhMjdjY2IyOWU="
+    yield session.start(session_id)
+    session.destroy()
+    yield session.end()
+
+```
+
+> 6. cache session instance
+
+```python
+
+   # after you used session ,you can cache it to cache factory
+   sess_fac.cache(session)
+
+```
+
+   
+
 ## Version
 0.1
 
