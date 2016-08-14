@@ -4,7 +4,7 @@
 
 **python version**: >= 3.4
 
-**backend**: redis,memcache
+**backend**: redis,memcache,disk
 
 **required**: tornadis, tornado, asyncmc
 
@@ -26,14 +26,19 @@ config = {
    "host":"localhost",
    "port":6379,
 }
-sess_fac = SessionCacheFactory("redis",config)
+sess_fac = SessionCacheFactory("redis", config)
 
 # or 
 # config = {
 #      "host":["192.168.0.1","192.168.0.2"],
 #      "port":[4000,5000]
 # }
-# sess_fac = SessionCacheFactory("memcache",config)
+# sess_fac = SessionCacheFactory("memcache", config)
+#
+#
+# or 
+# config = {"root":"/tmp"}
+# sess_fac = SessionCacheFactory("disk", config)
 #
 
 session = sess_fac.get_session()
