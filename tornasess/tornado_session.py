@@ -34,17 +34,29 @@ class AbstractSession(object):
         uuidhex = str(uuid.uuid4().hex)
         return base64.b64encode(uuidhex.encode("utf-8")).decode("utf-8")
 
+    def __contains__(self, key):
+        raise NotImplementedError()
+
+    def __getitem__(self, key):
+        raise NotImplementedError()
+
+    def __setitem__(self, key, value):
+        raise NotImplementedError()
+
+    def __delitem__(self, key):
+        raise NotImplementedError()
+
     def set(self, key, value):
         r"""
             store value to session storage
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def get(self, key):
         r"""
             get value from session storage
         """   
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def multi_set(self, pairs):
         r"""
@@ -52,7 +64,7 @@ class AbstractSession(object):
             @Args:
                 pairs: a dict of session key-value 
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def multi_get(self, key_l):
         r"""
@@ -60,47 +72,45 @@ class AbstractSession(object):
             @Args:
                 key_l: a list of session key
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def all(self):
         """
             get all data from current session storage
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def refresh_sid(self, session_id=None):
         """
             create new session 
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @gen.coroutine
     def start(self, session_id=None):
         r"""
             start session  operation
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @gen.coroutine
-    def save(self, expire=0):
+    def end(self, expire=0):
         r"""
             save data of the  session instance 
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
-    @gen.coroutine
-    def destroy(self, session_id):
+    def destroy(self):
         r"""
             destroy the session 
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
-    @gen.coroutine
-    def delete(self, key, session_id):
+    def delete(self, key):
         r"""
             delete specific data of the related session
         """ 
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @property
     def session_id(self):
@@ -114,7 +124,7 @@ class SessionNotStartError(Exception):
     pass
 
 
-class RedisSession(AbstractSession):
+class Session(AbstractSession):
 
     def __init__(self, host, port, *, autoconnect=True, cache_factory=None):
         super(RedisSession, self).__init__()
