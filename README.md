@@ -15,7 +15,7 @@ $ python3.x setup.py install
 
 ## Quickstarted
 
-> 1. create session instance
+>  create session instance
 
 ```python
 
@@ -45,7 +45,7 @@ session = sess_fac.get_session()
 
 ```
 
-> 2. set session data
+>  set session data
 
 ```python
 
@@ -57,7 +57,7 @@ session = sess_fac.get_session()
 
 ```
 
-> 3. get session data
+>  get session data
 
 ```python
 
@@ -78,7 +78,7 @@ session = sess_fac.get_session()
 
 ```
 
-> 4. delete session data
+>  delete session data
 
 ```python
 
@@ -90,7 +90,7 @@ session = sess_fac.get_session()
     
 ```
 
-> 5. destroy session
+>  destroy session
 
 ```python
 
@@ -101,7 +101,7 @@ session = sess_fac.get_session()
 
 ```
 
-> 6. cache session instance
+>  cache session instance
 
 ```python
 
