@@ -541,13 +541,13 @@ class ServerCommandsMixin:
 
 
 class _PipelineWrapper(object):
-    __commands_convert_pairs = {
+    _commands_convert_pairs = {
         "delete": "del"
     }
 
     def __init__(self, pipeline, client):
-        self.__pipeline = pipeline
-        self.__client = client
+        self._pipeline = pipeline
+        self._client = client
 
     def _dict_to_list(self, val_dict):
         val_l = deque()
@@ -556,11 +556,10 @@ class _PipelineWrapper(object):
         return list(val_l)
 
     def _command_convert(self, command):
-        if command in self.__commands_convert_pairs:
-            return self.__commands_convert_pairs.get(command, command)
+        return self._commands_convert_pairs.get(command, command)
 
     def _pipeline_commands(self, *args, **kw):
-        commands = self.__commands.split('_')
+        commands = self._commands.split('_')
         if len(args) > 1:
             parsed_args = deque()
             parsed_args.appendleft(args[0])
@@ -574,21 +573,21 @@ class _PipelineWrapper(object):
             parsed_args = args
         if len(commands) == 1:
             commands[0] = self._command_convert(commands[0])
-            self.__pipeline.stack_call(commands[0], *list(parsed_args))
+            self._pipeline.stack_call(commands[0], *list(parsed_args))
         elif len(commands) == 2:
-            self.__pipeline.stack_call(commands[0], commands[
-                                       1], *list(parsed_args))
+            self._pipeline.stack_call(commands[0], commands[1],\
+                *list(parsed_args))
         else:
             pass
 
     def __getattr__(self, attr):
-        self.__commands = attr
+        self._commands = attr
         return self._pipeline_commands
 
     @decode
     @gen.coroutine
     def execute(self):
-        result = yield self.__client.call(self.__pipeline)
+        result = yield self._client.call(self._pipeline)
         return result
 
 
