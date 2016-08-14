@@ -11,7 +11,7 @@ setup(
     author_email="19941222hb@gmail.com",
     description="A tornado session implementation",
     license="MIT",
-    packages=find_packages(),
-    install_requires=['tornadis'],
+    package=find_packages(),
+    install_requires=['tornado', 'tornadis', 'asyncmc',],
     include_package_data=True
 )
