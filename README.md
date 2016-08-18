@@ -13,6 +13,12 @@
 $ python3.x setup.py install
 ```
 
+or
+
+```sh
+$ pip3.x install tornasess
+```
+
 ## Quickstarted
 
 >  create session instance
