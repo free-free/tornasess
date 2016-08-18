@@ -27,7 +27,7 @@ setup(
     license="MIT",
     url="https://github.com/free-free/tornasess",
     packages=find_packages(),
-    install_requires=re.split(r"\r*\n+",read("requirements.txt")),
+    install_requires=["tornado","asyncmc","tornadis"],
     include_package_data=True,
     keywords=['tornado','session'],
     classifiers=[
