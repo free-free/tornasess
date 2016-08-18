@@ -1,6 +1,13 @@
-## Tornado session 
+Tornado session 
+===============
 
-## Environment
+.. image:: https://img.shields.io/dub/l/vibe-d.svg 
+  :target: LICENSE
+  :align: left
+
+ 
+Environment
+------------
 
 **python version**: >= 3.4
 
@@ -8,52 +15,58 @@
 
 **required**: tornadis, tornado, asyncmc
 
-## Installation
-```sh
-$ python3.x setup.py install
-```
+
+Installation
+------------
+
+.. code-block:: bash
+
+    $ python3.x setup.py install
+
 
 or
 
-```sh
-$ pip3.x install tornasess
-```
+.. code-block:: bash
 
-## Quickstarted
 
->  create session instance
+    $ pip3.x install tornasess
 
-```python
 
-from tornado import ioloop,gen
-from tornasess  import SessionCacheFactory
+Quickstarted
+------------
 
-config = {
-   "host":"localhost",
-   "port":6379,
-}
-sess_fac = SessionCacheFactory("redis", config)
+create session instance
 
-# or 
-# config = {
-#      "host":["192.168.0.1","192.168.0.2"],
-#      "port":[4000,5000]
-# }
-# sess_fac = SessionCacheFactory("memcache", config)
-#
-#
-# or 
-# config = {"root":"/tmp"}
-# sess_fac = SessionCacheFactory("disk", config)
-#
+.. code-block:: python
 
-session = sess_fac.get_session()
+    from tornado import ioloop,gen
+    from tornasess  import SessionCacheFactory
 
-```
+    config = {
+       "host":"localhost",
+       "port":6379,
+    }
+    sess_fac = SessionCacheFactory("redis", config)
 
->  set session data
+    # or 
+    # config = {
+    #      "host":["192.168.0.1","192.168.0.2"],
+    #      "port":[4000,5000]
+    # }
+    # sess_fac = SessionCacheFactory("memcache", config)
+    #
+    #
+    # or 
+    # config = {"root":"/tmp"}
+    # sess_fac = SessionCacheFactory("disk", config)
+    #
 
-```python
+    session = sess_fac.get_session()
+
+
+set session data
+
+.. code-block:: python
 
     yield session.start()
     session['name'] = 'xxxxx'
@@ -61,11 +74,10 @@ session = sess_fac.get_session()
     session.multi_set({"address":"xxxx","sex":"xxx"})
     yield session.end(expires=3600)
 
-```
 
->  get session data
+get session data
 
-```python
+.. code-block:: python
 
     session_id = "GU3ZTM2YTA5ZWViNDE4MTgzM2Q3MzhhMjdjY2IyOWU="
     yield session.start(session_id)
@@ -82,11 +94,10 @@ session = sess_fac.get_session()
     #   if you don't make change to session data, 
     #   it's not necessary to call 'session.end()'
 
-```
 
->  delete session data
+delete session data
 
-```python
+.. code-block:: python
 
     session_id = "GU3ZTM2YTA5ZWViNDE4MTgzM2Q3MzhhMjdjY2IyOWU="
     yield session.start(session_id)
@@ -94,34 +105,32 @@ session = sess_fac.get_session()
     del session['age']
     yield session.end()
     
-```
 
->  destroy session
+destroy session
 
-```python
+.. code-block:: python
 
     session_id = "GU3ZTM2YTA5ZWViNDE4MTgzM2Q3MzhhMjdjY2IyOWU="
     yield session.start(session_id)
     session.destroy()
     yield session.end()
 
-```
 
->  cache session instance
+cache session instance
 
-```python
+.. code-block:: python
 
    # after you used session ,you can cache it to cache factory
    sess_fac.cache(session)
 
-```
 
-   
+Version
+------
 
-## Version
 0.1
 
-## LICENSE
+LICENSE
+------
 
-[MIT LICENSE](LICENSE)
+`MIT LICENSE<LICENSE>`_
 
