@@ -14,7 +14,7 @@ setup(
     url="https://github.com/free-free/tornasess",
     packages=find_packages(),
     install_requires=re.split(r"\r*\n+",open("requirements.txt","r").read())[0:-1],
-    include_package_data=True
+    include_package_data=True,
     keywords=['submail','sdk'],
     classifiers=[
         'Intended Audience :: Developers',
