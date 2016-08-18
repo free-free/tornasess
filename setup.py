@@ -23,7 +23,7 @@ setup(
     author="HuangBiao",
     author_email="19941222hb@gmail.com",
     description="A tornado session implementation",
-    long_description=read("READM.rst"),
+    long_description=read("README.rst"),
     license="MIT",
     url="https://github.com/free-free/tornasess",
     packages=find_packages(),
