@@ -3,15 +3,23 @@ from setuptools import setup,find_packages
 import re
 import os
 
-from tornasess import __version__
 
 def read(f):
     return open(os.path.join(os.path.dirname(__file__),f)).read().strip()
 
+def find_version(f):
+    file_content = read(f)
+    try:
+        version = re.findall(r'^__version__ = "([^\'\"]+)"\r?$',
+            file_content, re.M)[0]
+    except IndexError:
+        raise RuntimeError("Unable to determine version.")
+    return version
+
 
 setup(
     name="tornasess",
-    version=__version__,
+    version=find_version("tornasess/__init__.py"),
     author="HuangBiao",
     author_email="19941222hb@gmail.com",
     description="A tornado session implementation",
