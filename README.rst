@@ -3,7 +3,6 @@ Tornado session
 
 .. image:: https://img.shields.io/dub/l/vibe-d.svg 
   :target: LICENSE
-  :align: left
 
  
 Environment
