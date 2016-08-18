@@ -5,7 +5,6 @@ Tornado session
   :target: LICENSE
   :align: left
 
-
  
 Environment
 ------------
