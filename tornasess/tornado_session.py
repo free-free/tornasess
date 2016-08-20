@@ -8,10 +8,8 @@ try:
 except ImportError:
     import pickle
 
-import tornadis
 from tornado import gen
 
-from .tornado_hbredis import TornadoHBRedis
 from .backend import SessionStore
 
 
