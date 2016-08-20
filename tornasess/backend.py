@@ -13,7 +13,7 @@ from  tornado import gen
 import asyncmc
 
 
-from .tornado_hbredis import TornadoHBRedis
+from tornado_hbredis import TornadoHBRedis
 
 
 def _serialize(func):
