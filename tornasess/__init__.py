@@ -2,7 +2,7 @@
 
 __author___ = "HUANGBIAO"
 __email__  = "19941222hb@gmail.com"
-__version__ = "0.5"
+__version__ = "0.6"
 
 
 
