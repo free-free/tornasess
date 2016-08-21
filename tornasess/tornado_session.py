@@ -251,7 +251,7 @@ class SessionCacheFactory(object):
             session_instance.used_flag = True
             return session_instance
         else:
-            session_instance.refresh()
+            session_instance.refresh_sid()
             return session_instance
 
     def _get_session(self):
